@@ -5,7 +5,7 @@ class AppsController < ApplicationController
   def index
     @apps = App.all
 
-    render json: @apps
+    render json: @apps.as_json(except: [:id])
   end
 
   # GET /apps/1
@@ -18,7 +18,7 @@ class AppsController < ApplicationController
     @app = App.new(app_params)
 
     if @app.save
-      render json: @app, status: :created
+      render json: @app.as_json(except: [:id]), status: :created
     else
       render json: @app.errors, status: :unprocessable_entity
     end
@@ -27,7 +27,7 @@ class AppsController < ApplicationController
   # PATCH/PUT /apps/1
   def update
     if @app.update(app_params)
-      render json: @app
+      render json: @app.as_json(except: [:id])
     else
       render json: @app.errors, status: :unprocessable_entity
     end

@@ -6,12 +6,12 @@ class MessagesController < ApplicationController
   def index
     @messages = Message.where(chat_id: @chat.id)
 
-    render json: @messages
+    render json: @messages.as_json(except: [:id])
   end
 
   # GET /messages/1
   def show
-    render json: @message
+    render json: @message.as_json(except: [:id])
   end
 
   # POST /messages
@@ -25,14 +25,18 @@ class MessagesController < ApplicationController
     @message.number = @message_number
 
     @message.save!
+
+    @chat.messageCount = @message_number
+
+    @chat.save!
         
-    render json: @message_number, status: :created
+    render json: {"messageNumber": @message_number}, status: :created
   end
 
   # PATCH/PUT /messages/1
   def update
     if @message.update(message_params)
-      render json: @message
+      render json: @message.as_json(except: [:id])
     else
       render json: @message.errors, status: :unprocessable_entity
     end
