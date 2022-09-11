@@ -20,6 +20,9 @@ gem 'puma', '~> 3.7'
 # gem 'bcrypt', '~> 3.1.7'
   gem 'redis'
   gem 'redis-namespace'
+  gem 'elasticsearch', "< 7.14"
+  gem 'elasticsearch-model'
+  gem 'elasticsearch-rails'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

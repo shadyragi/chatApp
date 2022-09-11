@@ -44,9 +44,11 @@ class MessagesController < ApplicationController
 
   def search
 
-    messages = Message.where("content like ?", "%#{query_params[:search]}%")
+    @query = query_params[:search]
 
-    render json: messages
+    @messages = Message.search(@chat.id, @query)
+
+    render json: @messages
 
   end
 

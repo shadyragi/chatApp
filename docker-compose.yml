@@ -1,5 +1,35 @@
 version: '2.1'
 services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.6.0
+    ports:
+      - "9200:9200"
+    environment:
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+      - cluster.name=elasticsearch-rails
+      - cluster.routing.allocation.disk.threshold_enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "http.host=0.0.0.0"
+      - "transport.host=127.0.0.1"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    mem_limit: 1g
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - /usr/share/elasticsearch/data
+    healthcheck:
+      test: curl -f http://localhost:9200 || exit 1
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
   redis:
     image: redis:5-alpine
     command: redis-server
@@ -35,9 +65,11 @@ services:
       - "3000:3000"
     depends_on:
       - db
+      - elasticsearch
       - redis
     links:
       - db
+      - elasticsearch
       - redis
     environment:
       DB_USER: instabug
@@ -45,6 +77,7 @@ services:
       DB_PASSWORD: password
       DB_HOST: db
       REDIS_URL: redis://redis:6379/1
+      ELASTICSEARCH_URL: http://elasticsearch:9200
 
 volumes:
   esdata:
