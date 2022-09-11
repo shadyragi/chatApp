@@ -6,6 +6,7 @@
   * Rails v(5.1.7)
   * Mysql v(8.0)
   * Redis v(4.6)
+  * Elasticsearch v(7.13.3)
 
 # Steps To Run the app
 Install docker and docker-compose before starting this installation process.
